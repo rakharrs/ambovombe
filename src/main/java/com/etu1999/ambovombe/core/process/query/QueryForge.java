@@ -76,8 +76,13 @@ public class QueryForge {
      * @param value
      * @return
      * @throws DAOException
+     * @throws SecurityException
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * @throws IllegalArgumentException
+     * @throws IllegalAccessException
      */
-    public static String selectById(DAO object, Object value) throws DAOException{
+    public static String selectById(DAO object, Object value) throws DAOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
         Field id = Dhelper.getIdField(object);
         String idName = Dhelper.getColumnName(id);
         String query = String.format(

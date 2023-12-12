@@ -129,7 +129,6 @@ public class DAO extends DAC{
         String seq = getSequence(con, pk);
         for (int i = 0; i < pk.length()-pk.prefix().length()-seq.length(); i++) pkSeq.append("0");
         for (int i = 0; i < seq.length(); i++) pkSeq.append(seq.charAt(i));
-        System.out.println(pkSeq);
         return pkSeq.toString();
     }
 
