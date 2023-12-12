@@ -1,0 +1,19 @@
+<database>
+    <connection>
+        <unit-name>connection-1</unit-name>
+        <driver>org.postgresql.Driver</driver>
+        <url>jdbc:postgresql://127.0.0.1:5432</url>
+        <dbname>fifidianana</dbname>
+        <user>rakharrs</user>
+        <password>pixel</password>
+    </connection>
+    
+    <connection>
+        <unit-name>solar</unit-name>
+        <driver>org.postgresql.Driver</driver>
+        <url>jdbc:postgresql://127.0.0.1:5432</url>
+        <dbname>solar_panel</dbname>
+        <user>rakharrs</user>
+        <password>pixel</password>
+    </connection>
+</database>
