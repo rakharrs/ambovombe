@@ -1,5 +1,6 @@
 package com.etu1999.ambovombe.core.process;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
@@ -11,7 +12,7 @@ import java.util.List;
 
 import com.etu1999.ambovombe.core.exception.DAOException;
 import com.etu1999.ambovombe.core.process.query.QueryForge;
-import com.etu1999.ambovombe.mapping.annotation.more.PrimaryKey;
+import com.etu1999.ambovombe.mapping.annotation.misc.PrimaryKey;
 import com.etu1999.ambovombe.utils.Dhelper;
 
 import lombok.Getter;
@@ -92,6 +93,7 @@ public class DAO extends DAC{
 
     public <T> List<T> findWhere(Connection con, String predicat) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException, DAOException, IllegalArgumentException, SecurityException, ClassNotFoundException{
         String query = QueryForge.selectWhere(this, predicat);
+        System.out.println("findwherequery = "+ query);
         List<T> vql = DAC.sqltoArray(con, query, this);
         return vql;
     }

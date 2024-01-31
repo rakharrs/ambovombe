@@ -11,8 +11,8 @@ import com.etu1999.ambovombe.mapping.annotation.data.ForeignKey;
 import com.etu1999.ambovombe.mapping.annotation.data.Id;
 import com.etu1999.ambovombe.mapping.annotation.data.Table;
 import com.etu1999.ambovombe.mapping.annotation.data.UnitSource;
-import com.etu1999.ambovombe.mapping.annotation.more.Inherit;
-import com.etu1999.ambovombe.mapping.conf.ForeignType;
+import com.etu1999.ambovombe.mapping.annotation.misc.Inherit;
+import com.etu1999.ambovombe.mapping.fk.ForeignType;
 
 public class Dhelper {
 

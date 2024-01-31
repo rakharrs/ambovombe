@@ -1,4 +1,4 @@
-package com.etu1999.ambovombe.mapping.conf;
+package com.etu1999.ambovombe.mapping.fk;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

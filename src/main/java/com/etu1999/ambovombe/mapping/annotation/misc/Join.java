@@ -1,4 +1,4 @@
-package com.etu1999.ambovombe.mapping.annotation.more;
+package com.etu1999.ambovombe.mapping.annotation.misc;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

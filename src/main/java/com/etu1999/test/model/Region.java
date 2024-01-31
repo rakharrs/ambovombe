@@ -1,5 +1,6 @@
 package com.etu1999.test.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.etu1999.ambovombe.core.exception.DAOException;
@@ -9,8 +10,8 @@ import com.etu1999.ambovombe.mapping.annotation.data.ForeignKey;
 import com.etu1999.ambovombe.mapping.annotation.data.Id;
 import com.etu1999.ambovombe.mapping.annotation.data.Table;
 import com.etu1999.ambovombe.mapping.annotation.data.UnitSource;
-import com.etu1999.ambovombe.mapping.annotation.more.Inherit;
-import com.etu1999.ambovombe.mapping.conf.ForeignType;
+import com.etu1999.ambovombe.mapping.annotation.misc.Inherit;
+import com.etu1999.ambovombe.mapping.fk.ForeignType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,7 +32,7 @@ public class Region extends DAO{
         mappedBy = "id_region",
         foreignType = ForeignType.OneToMany
     )
-    private List<District> districts;
+    private List<District> districts = new ArrayList<>();
 
     @Column("nom_region")
     private String nomRegion;

@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.etu1999.ambovombe.mapping.conf.ForeignType;
+import com.etu1999.ambovombe.mapping.fk.ForeignType;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

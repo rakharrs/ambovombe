@@ -1,5 +1,6 @@
 package com.etu1999.ambovombe.core.connection;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -17,7 +18,7 @@ import lombok.Setter;
 /**
  * @author rakharrs
  */
-public class GConnection {
+public class GConnection implements Serializable{
 
     private Connection connection = null;
 

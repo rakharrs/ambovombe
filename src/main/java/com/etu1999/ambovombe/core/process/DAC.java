@@ -3,6 +3,7 @@ package com.etu1999.ambovombe.core.process;
 import static com.etu1999.ambovombe.utils.Dhelper.getDAFields;
 import static com.etu1999.ambovombe.utils.Dhelper.getIdField;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -20,10 +21,11 @@ import com.etu1999.ambovombe.core.exception.DAOException;
 import com.etu1999.ambovombe.core.process.config.PreProcess;
 import com.etu1999.ambovombe.mapping.annotation.data.ForeignKey;
 import com.etu1999.ambovombe.mapping.annotation.data.UnitSource;
-import com.etu1999.ambovombe.mapping.conf.ForeignKeyObject;
-import com.etu1999.ambovombe.mapping.conf.ForeignType;
+import com.etu1999.ambovombe.mapping.fk.ForeignKeyObject;
+import com.etu1999.ambovombe.mapping.fk.ForeignType;
 import com.etu1999.ambovombe.utils.Dhelper;
 import com.etu1999.ambovombe.utils.Misc;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,14 +35,22 @@ import lombok.Setter;
  * @author rakharrs
  */
 @Getter @Setter
-class DAC {
+class DAC implements Serializable{
+    @JsonIgnore
     private GConnection connection;
-    
+    @JsonIgnore
     private Field fieldId;
+    @JsonIgnore
     private String unitName;    // The database unit name from xml
+    @JsonIgnore
     private String columns;     // Formatted as (id, name, ....)
+    @JsonIgnore
     private String table;       // The table name
+    @JsonIgnore
+    private String id_column;
+    @JsonIgnore
     private List<Field> inheritedFields;   // as the name indicate it
+    @JsonIgnore
     private HashMap<String, ForeignKeyObject> foreignKeys = new HashMap<>();
     //private QueryForge queryBuilder = new QueryForge();
     
@@ -48,7 +58,13 @@ class DAC {
         try {            
             GConfiguration configuartion = PreProcess.getConfiguration();
             Class<? extends DAC> cls = getClass();
-            setFieldId(getIdField(this));
+            try {
+                setFieldId(getIdField(this));
+                setId_column(Dhelper.getColumnName(getFieldId()));
+            } catch (DAOException e) {
+                e.printStackTrace();
+            }
+        
             setUnitName(cls.getAnnotation(UnitSource.class).value());
             setTable(Dhelper.getTableName(this));
             setInheritedFields(Dhelper.getSuperFields(cls));
@@ -156,6 +172,8 @@ class DAC {
         st.close();
         return val;
     }
+
+    
 
     /**
      * Executes an update SQL query on the specified database connection.

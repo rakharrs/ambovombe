@@ -1,4 +1,5 @@
-package com.etu1999.ambovombe.mapping.annotation.more;
+package com.etu1999.ambovombe.mapping.annotation.misc;
+
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,6 +8,8 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Transient {
-    String value() default "";
+public @interface PrimaryKey {
+    String prefix();
+    String sequence();
+    int length();
 }

@@ -5,9 +5,12 @@ import static com.etu1999.ambovombe.utils.Misc.convertForSql;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import com.etu1999.ambovombe.core.exception.DAOException;
 import com.etu1999.ambovombe.core.process.DAO;
+import com.etu1999.ambovombe.mapping.annotation.data.ForeignKey;
+import com.etu1999.ambovombe.mapping.fk.ForeignType;
 import com.etu1999.ambovombe.utils.Dhelper;
 import com.etu1999.ambovombe.utils.Misc;
 
@@ -28,16 +31,54 @@ public class QueryForge {
                 fieldsName[i], 
                 getFieldValue(object, fieldsName[i])));
             if(i < fieldsName.length - 1)
-                queryBuilder.append(" and");
+                queryBuilder.append(" , ");
         }
         String idField = object.getFieldId().getName();
         queryBuilder.append(String.format(" where %s = %s", idField, getFieldValue(object, idField)));
+        System.out.println(queryBuilder.toString());
         return queryBuilder.toString();
     }
 
     public static String insert(DAO object) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
         StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append(String.format("insert into %s(%s) values(%s)",object.getTable(),object.getColumns(), getFieldValues(Dhelper.getFieldsName(object), object)));
+        queryBuilder.append(String.format("insert into %s(%s) values(%s)",object.getTable(),object.getColumns(), getFieldValues(Dhelper.getDAFields(object), object)));
+        System.out.println("insert Jean " + queryBuilder.toString());
+    
+        return queryBuilder.toString();
+    }
+
+    public static String getFieldValues(List<Field> fields, DAO object) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
+        StringBuilder queryBuilder = new StringBuilder();
+        int k = 1;
+        for (int i = 0; i < fields.size(); i++) {
+            Object attrb = null;
+            if(fields.get(i).isAnnotationPresent(ForeignKey.class)){
+                ForeignKey fk = fields.get(i).getAnnotation(ForeignKey.class);
+                if(fk.foreignType() == ForeignType.ManyToOne){
+                    DAO foreign_obj = (DAO) Misc.getGetter(object, fields.get(i).getName()).invoke(object);
+                    if(foreign_obj != null){
+                        attrb = Misc.getGetter(foreign_obj, foreign_obj.getFieldId().getName()).invoke(foreign_obj);
+                    }
+                    queryBuilder.append(Misc.convertForSql(attrb));
+                    if(i < fields.size() - k)
+                        queryBuilder.append(",");
+                }if(fk.foreignType() == ForeignType.OneToMany){
+                    int lastindex = queryBuilder.length()-1;
+                    if (queryBuilder.charAt(lastindex) == ',')
+                        queryBuilder.deleteCharAt(lastindex);
+
+                    k++;
+                }
+                continue;
+            }else{
+                if(attrb == null)
+                    attrb = Misc.getGetter(object, fields.get(i).getName()).invoke(object);
+    
+                queryBuilder.append(Misc.convertForSql(attrb));
+                if(i < (fields.size() - k))
+                    queryBuilder.append(",");
+            }
+        }
         return queryBuilder.toString();
     }
 
@@ -66,7 +107,8 @@ public class QueryForge {
     public static String selectAll(DAO object){
         String columns = object.getColumns();
         String table = object.getTable();
-        String query = String.format("select %s from %s", columns, table);
+        String id_column = object.getId_column();
+        String query = String.format("select %s from %s order by %s", columns, table, id_column);
         return query;
     }
 
@@ -85,12 +127,14 @@ public class QueryForge {
     public static String selectById(DAO object, Object value) throws DAOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
         Field id = Dhelper.getIdField(object);
         String idName = Dhelper.getColumnName(id);
+        String id_column = object.getId_column();
         String query = String.format(
-            "select %s from %s where %s = %s" ,
+            "select %s from %s where %s = %s order by %s" ,
                     object.getColumns(),
                     object.getTable(),
                     idName,
-                    convertForSql(value));
+                    convertForSql(value),
+                    id_column);
         return query;
     }
     /**
@@ -100,11 +144,15 @@ public class QueryForge {
      * @return
      */
     public static String selectWhere(DAO object, String predicat){
+        String id_column = object.getId_column();
         String query = String.format(
-            "select %s from %s where %s", 
+            "select %s from %s where %s order by %s", 
             object.getColumns(),
             object.getTable(),
-            predicat);
+            predicat,
+            id_column);
         return query;
     }
+
+    // Test panjiachen.github.io template
 }
