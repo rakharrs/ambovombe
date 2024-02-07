@@ -146,7 +146,7 @@ public class QueryForge {
     public static String selectWhere(DAO object, String predicat){
         String id_column = object.getId_column();
         String query = String.format(
-            "select %s from %s where %s order by %s", 
+            "select %s from %s where %s", 
             object.getColumns(),
             object.getTable(),
             predicat,
