@@ -62,9 +62,9 @@ class DAC implements Serializable{
                 setFieldId(getIdField(this));
                 setId_column(Dhelper.getColumnName(getFieldId()));
             } catch (DAOException e) {
-                e.printStackTrace();
+                System.out.println(this.getClass().getName() + "- WARNING : no @Id");
             }
-        
+            
             setUnitName(cls.getAnnotation(UnitSource.class).value());
             setTable(Dhelper.getTableName(this));
             setInheritedFields(Dhelper.getSuperFields(cls));

@@ -1,4 +1,7 @@
 <database>
+    <default>
+        <unit-name>connection-1</unit-name>
+    </default>
     <connection>
         <unit-name>connection-1</unit-name>
         <driver>org.postgresql.Driver</driver>
@@ -7,7 +10,6 @@
         <user>rakharrs</user>
         <password>pixel</password>
     </connection>
-    
     <connection>
         <unit-name>solar</unit-name>
         <driver>org.postgresql.Driver</driver>

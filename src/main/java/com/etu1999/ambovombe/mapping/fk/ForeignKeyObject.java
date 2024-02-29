@@ -45,17 +45,23 @@ public class ForeignKeyObject {
             con = new DAO().createConnection();
             init_con = true;
         }
-        if(ft == ForeignType.ManyToOne){
-            DAO foreign_object = (DAO) this.type.newInstance();
-            val = foreign_object.findById(con, getValue());
-        }else if(ft == ForeignType.OneToMany){
-            if(List.class.isAssignableFrom(field.getType())){
-                ParameterizedType pt = (ParameterizedType) field.getGenericType();
-                Class<?> pt_cl = (Class<?>) pt.getActualTypeArguments()[0];
-                DAO foreign = (DAO) pt_cl.newInstance();
-                val = foreign.findWhere(con, String.format(" %s = %s", annotation.mappedBy(), Misc.convertForSql(getValue())));
+        try {
+            if(ft == ForeignType.ManyToOne){
+                DAO foreign_object = (DAO) this.type.newInstance();
+                val = foreign_object.findById(con, getValue());
+            }else if(ft == ForeignType.OneToMany){
+                if(List.class.isAssignableFrom(field.getType())){
+                    ParameterizedType pt = (ParameterizedType) field.getGenericType();
+                    Class<?> pt_cl = (Class<?>) pt.getActualTypeArguments()[0];
+                    DAO foreign = (DAO) pt_cl.newInstance();
+                    val = foreign.findWhere(con, String.format(" %s = %s", annotation.mappedBy(), Misc.convertForSql(getValue())));
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            val = null;
         }
+
         if(init_con)
             con.close();
         return setter.invoke(object, val);

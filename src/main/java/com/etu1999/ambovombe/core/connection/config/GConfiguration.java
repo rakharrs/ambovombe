@@ -20,6 +20,7 @@ import lombok.Setter;
 public class GConfiguration {
 
     private HashMap<String, GConnection> connections = new HashMap<>();
+    private GConnection defaultConnection = null;
     
 
     /** the (database.xml) xml file path */
@@ -44,9 +45,16 @@ public class GConfiguration {
     public HashMap<String, GConnection> initConnections() throws Exception{
         Element e = XMLReader.readXml(getXml());
         NodeList nl = e.getElementsByTagName("connection");
+        NodeList defaultNode = e.getElementsByTagName("default");
+        Element defaultElement = (Element) defaultNode.item(0);
+        
         if(nl != null && nl.getLength() > 0)
             for (int i = 0; i < nl.getLength(); i++)
                 mappingElementConnection((Element) nl.item(i), false);
+        
+        GConnection gc = getConnections().get(XMLReader.getElementValue(defaultElement, "unit-name"));
+        setDefaultConnection(gc);
+        
         return getConnections();
     }
 
